@@ -46,11 +46,13 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed', Password::min(8)],
         ]);
 
+        $isFirstUser = User::count() === 0;
+
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'user',
+            'role' => $isFirstUser ? 'admin' : 'user',
         ]);
 
         Auth::login($user);

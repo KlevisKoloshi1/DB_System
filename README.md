@@ -82,9 +82,10 @@ npm run dev
 - Product search/filter + pagination
 - Reports and analytics (joins, aggregates, group by, having)
 
-## Seeder Accounts
-- `admin@inventory.local` / `password`
-- `test@example.com` / `password`
+## Initial Data Policy
+- No default users or business records are seeded.
+- Each installation starts with an empty database.
+- Users create their own accounts and records through the app UI.
 
 ## Sample SQL Queries
 ```sql
