@@ -1,21 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    @vite(['resources/css/app.css'])
+    <title>Register — DB System</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.ico') }}">
+    @include('partials.vite-assets', ['entries' => ['resources/css/app.css', 'resources/js/app.js']])
 </head>
-<body class="min-h-screen bg-slate-100 flex items-center justify-center p-6">
-<form method="POST" action="{{ route('register.store') }}" class="w-full max-w-md bg-white p-6 rounded-lg shadow">
-    @csrf
-    <h1 class="text-2xl font-bold mb-6">Create Account</h1>
-    <label class="block mb-3"><span>Name</span><input type="text" name="name" value="{{ old('name') }}" class="mt-1 w-full border rounded px-3 py-2">@error('name') <small class="text-red-600">{{ $message }}</small> @enderror</label>
-    <label class="block mb-3"><span>Email</span><input type="email" name="email" value="{{ old('email') }}" class="mt-1 w-full border rounded px-3 py-2">@error('email') <small class="text-red-600">{{ $message }}</small> @enderror</label>
-    <label class="block mb-3"><span>Password</span><input type="password" name="password" class="mt-1 w-full border rounded px-3 py-2">@error('password') <small class="text-red-600">{{ $message }}</small> @enderror</label>
-    <label class="block mb-4"><span>Confirm Password</span><input type="password" name="password_confirmation" class="mt-1 w-full border rounded px-3 py-2"></label>
-    <button type="submit" class="w-full bg-slate-900 text-white py-2 rounded">Register</button>
-    <p class="mt-4 text-sm">Already registered? <a class="underline" href="{{ route('login') }}">Login</a></p>
-</form>
+<body class="h-full bg-[#f0f4f8] flex items-center justify-center p-6 antialiased">
+
+<div class="w-full max-w-md">
+
+    {{-- Logo / brand --}}
+    <div class="flex flex-col items-center mb-8">
+        <img src="{{ asset('logo.png') }}" alt="DB System" class="h-14 w-14 object-contain mb-3">
+        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">DB System</h1>
+        <p class="text-sm text-slate-500 mt-1">Inventory & Sales Management</p>
+    </div>
+
+    {{-- Card --}}
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+        <h2 class="text-lg font-semibold text-slate-800 mb-6">Create your account</h2>
+
+        <form method="POST" action="{{ route('register.store') }}" class="space-y-4">
+            @csrf
+            <div>
+                <label class="form-label" for="name">Full name</label>
+                <input id="name" type="text" name="name" value="{{ old('name') }}"
+                    class="form-input" placeholder="Jane Smith" autocomplete="name" required>
+                @error('name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+            </div>
+            <div>
+                <label class="form-label" for="email">Email address</label>
+                <input id="email" type="email" name="email" value="{{ old('email') }}"
+                    class="form-input" placeholder="you@example.com" autocomplete="email" required>
+                @error('email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+            </div>
+            <div>
+                <label class="form-label" for="password">Password</label>
+                <input id="password" type="password" name="password"
+                    class="form-input" placeholder="••••••••" autocomplete="new-password" required>
+                @error('password') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+            </div>
+            <div>
+                <label class="form-label" for="password_confirmation">Confirm password</label>
+                <input id="password_confirmation" type="password" name="password_confirmation"
+                    class="form-input" placeholder="••••••••" autocomplete="new-password" required>
+            </div>
+            <button type="submit" class="btn-primary w-full justify-center py-2.5 mt-2">
+                Create account
+            </button>
+        </form>
+    </div>
+
+    <p class="text-center text-sm text-slate-500 mt-5">
+        Already have an account?
+        <a href="{{ route('login') }}" class="font-semibold text-[#047481] hover:text-[#036672] transition-colors">Sign in</a>
+    </p>
+</div>
+
 </body>
 </html>
