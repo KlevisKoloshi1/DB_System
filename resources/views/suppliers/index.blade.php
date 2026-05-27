@@ -1,12 +1,54 @@
 @extends('layouts.app')
 @section('title', 'Suppliers')
 @section('heading', 'Suppliers')
+
 @section('content')
-<a href="{{ route('suppliers.create') }}" class="bg-emerald-700 text-white px-3 py-2 rounded inline-block mb-3">Add Supplier</a>
-<div class="bg-white rounded shadow overflow-x-auto">
-<table class="w-full text-sm"><thead><tr><th class="p-3 text-left">Name</th><th>Email</th><th>City</th><th></th></tr></thead><tbody>
-@foreach($suppliers as $supplier)
-<tr class="border-t"><td class="p-3">{{ $supplier->name }}</td><td>{{ $supplier->email }}</td><td>{{ $supplier->city }}</td><td><a class="underline mr-2" href="{{ route('suppliers.edit', $supplier) }}">Edit</a><form class="inline" method="POST" action="{{ route('suppliers.destroy', $supplier) }}">@csrf @method('DELETE')<button class="text-red-700">Delete</button></form></td></tr>
-@endforeach
-</tbody></table></div><div class="mt-4">{{ $suppliers->links() }}</div>
+
+<div class="flex justify-end mb-5">
+    <a href="{{ route('suppliers.create') }}" class="btn-primary">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        Add Supplier
+    </a>
+</div>
+
+<div class="panel overflow-x-auto">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>City</th>
+                <th class="text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @forelse($suppliers as $supplier)
+            <tr>
+                <td class="font-medium text-slate-900">{{ $supplier->name }}</td>
+                <td class="text-slate-500">{{ $supplier->email }}</td>
+                <td class="text-slate-500">{{ $supplier->phone }}</td>
+                <td class="text-slate-500">{{ $supplier->city }}</td>
+                <td class="text-right">
+                    <div class="flex items-center justify-end gap-3">
+                        <a href="{{ route('suppliers.edit', $supplier) }}"
+                            class="text-sm font-medium text-[#047481] hover:text-[#036672] transition-colors">Edit</a>
+                        <form method="POST" action="{{ route('suppliers.destroy', $supplier) }}">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="5" class="text-center py-10 text-slate-400">No suppliers yet.</td>
+            </tr>
+        @endforelse
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-4">{{ $suppliers->links() }}</div>
+
 @endsection
