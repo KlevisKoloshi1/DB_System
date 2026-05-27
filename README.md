@@ -41,7 +41,17 @@ Normalization:
 - Composite indexes and report-friendly indexes
 - Transactional seeding
 
+## Prerequisites
+
+- PHP 8.3+ with extensions: `pdo_pgsql`, `mbstring`, `openssl`, `tokenizer`, `xml`, `ctype`, `json`, `bcmath`
+- Composer 2.x
+- Node.js 18+ and npm
+- PostgreSQL 14+ (required for views, functions, and triggers)
+
 ## Installation and Environment Setup
+
+### 1. Clone and install dependencies
+
 ```bash
 composer install
 npm install
@@ -49,26 +59,74 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Edit `.env` with PostgreSQL:
+### 2. Configure PostgreSQL
+
+Create an empty database in PostgreSQL (example name: `DB_System`):
+
+```sql
+CREATE DATABASE "DB_System";
+```
+
+Edit `.env` and set the database connection:
+
 ```env
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
 DB_PORT=5432
-DB_DATABASE=inventory_erp
+DB_DATABASE=DB_System
 DB_USERNAME=postgres
-DB_PASSWORD=postgres
+DB_PASSWORD=your_password
 ```
 
-Run database and seed:
+### 3. Run migrations
+
+This creates all tables, indexes, the `monthly_sales_summary` view, and PostgreSQL stock triggers. The default `DatabaseSeeder` is intentionally empty.
+
 ```bash
-php artisan migrate:fresh --seed
+php artisan migrate
 ```
 
-Run app:
+To reset the database during development:
+
+```bash
+php artisan migrate:fresh
+```
+
+### 4. (Optional) Load Albanian sample data
+
+To populate the app with demo records in Albanian (categories, suppliers, customers, products, orders, stock movements, and payments), run:
+
+```bash
+php artisan db:seed --class=Database\\Seeders\\KlevisAlbanianSampleSeeder
+```
+
+Re-running this seeder updates the demo user password and role; it skips business data if categories already exist.
+
+**Demo admin account (after running the seeder above):**
+
+| Field    | Value                         |
+|----------|-------------------------------|
+| Email    | `kleviskoloshi8@gmail.com`    |
+| Password | `Klevis2008`                  |
+| Role     | `admin`                       |
+
+Without the sample seeder, register the first user at `/register` — that account becomes `admin`; later registrations are `user`.
+
+### 5. Start the application
+
+In one terminal:
+
 ```bash
 php artisan serve
+```
+
+In another terminal (frontend assets):
+
+```bash
 npm run dev
 ```
+
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000) and sign in at `/login`.
 
 ## Authentication and Authorization
 - Register, Login, Logout
@@ -83,9 +141,11 @@ npm run dev
 - Reports and analytics (joins, aggregates, group by, having)
 
 ## Initial Data Policy
-- No default users or business records are seeded.
-- Each installation starts with an empty database.
-- Users create their own accounts and records through the app UI.
+
+- `php artisan migrate` leaves the database empty (no users or business records).
+- `DatabaseSeeder` is intentionally blank so production-style installs stay clean.
+- Use `KlevisAlbanianSampleSeeder` when you need Albanian demo data for development, demos, or grading.
+- Otherwise, create accounts and records through the UI (`/register`, CRUD modules).
 
 ## Sample SQL Queries
 ```sql
@@ -116,11 +176,18 @@ LIMIT 12;
 ```
 
 ## Final Testing Steps
+
 ```bash
-php artisan migrate:fresh --seed
+php artisan migrate:fresh
+php artisan db:seed --class=Database\\Seeders\\KlevisAlbanianSampleSeeder
 php artisan test
 ```
-- Verify login/register/logout
-- Verify admin-only routes (`/categories`, `/reports`)
-- Verify product CRUD + search/filter
-- Verify dashboard chart and report tables
+
+Manual checks:
+
+- Log in with the demo account (`kleviskoloshi8@gmail.com` / `Klevis2008`) or register a new user
+- Verify login, register, and logout
+- Verify admin-only routes (`/categories`, `/reports`) as an `admin` user
+- Verify product CRUD, search, and pagination
+- Verify dashboard KPIs, monthly sales chart, and recent orders (sample seeder provides completed sales)
+- Verify report tables on `/reports`
