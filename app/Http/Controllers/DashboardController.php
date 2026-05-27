@@ -21,8 +21,9 @@ class DashboardController extends Controller
         ];
 
         $monthlySales = DB::table('monthly_sales_summary')
-            ->selectRaw('to_char(month_start, \'YYYY-MM\') as month, gross_sales')
-            ->limit(6)
+            ->selectRaw("TO_CHAR(month_start, 'Mon YYYY') as month, gross_sales")
+            ->orderBy('month_start')
+            ->limit(12)
             ->get();
 
         $recentOrders = SalesOrder::with('customer')

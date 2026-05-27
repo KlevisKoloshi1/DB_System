@@ -33,7 +33,11 @@ class ReportController extends Controller
             ->limit(15)
             ->get();
 
-        $monthlySales = DB::table('monthly_sales_summary')->limit(12)->get();
+        $monthlySales = DB::table('monthly_sales_summary')
+            ->selectRaw("TO_CHAR(month_start, 'Mon YYYY') as month_start, gross_sales")
+            ->orderBy('month_start')
+            ->limit(12)
+            ->get();
 
         return view('reports.index', compact('topCustomers', 'bestProducts', 'lowStock', 'monthlySales'));
     }
