@@ -97,7 +97,7 @@ php artisan migrate:fresh
 To populate the app with demo records in Albanian (categories, suppliers, customers, products, orders, stock movements, and payments), run:
 
 ```bash
-php artisan db:seed --class=Database\\Seeders\\KlevisAlbanianSampleSeeder
+php artisan db:seed --class=KlevisAlbanianSampleSeeder
 ```
 
 Re-running this seeder updates the demo user password and role; it skips business data if categories already exist.
@@ -179,7 +179,7 @@ LIMIT 12;
 
 ```bash
 php artisan migrate:fresh
-php artisan db:seed --class=Database\\Seeders\\KlevisAlbanianSampleSeeder
+php artisan db:seed --class=KlevisAlbanianSampleSeeder
 php artisan test
 ```
 
